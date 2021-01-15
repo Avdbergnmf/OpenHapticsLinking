@@ -15,13 +15,15 @@ public class HapticLinking : MonoBehaviour
     public GameObject linkedObject = null;          // This is the object that will be linked to
     public Transform customControlPoint = null;     // The location of the point you want to control, this always takes the global position of the transform object you input
 
+    [ReadOnly] public GameObject grabbing = null;			    // Reference to the object currently grabbed
+
     // Private Variables
     private Vector3 relativeControlPoint;
     private Vector3 controlPoint;
 
     private GameObject hapticDevice = null;         // Reference to the GameObject representing the Haptic Device
     private bool buttonStatus = false;              // Is the button currently pressed?
-    private GameObject grabbing = null;			    // Reference to the object currently grabbed
+    
 
     private FixedJoint joint = null;                // The Unity physics joint created between the stylus and the object being grabbed.
     private FixedJoint jointPause = null;
@@ -71,7 +73,6 @@ public class HapticLinking : MonoBehaviour
         {
             if (oldButtonStatus == false && newButtonStatus == true)
             {
-                Debug.Log("Toggling Grab?, status = " + newButtonStatus.ToString());
                 if (ButtonActsAsToggle)
                 {
                     if (grabbing)
@@ -90,6 +91,7 @@ public class HapticLinking : MonoBehaviour
                 else release();
             }
         }
+        else if (grabbing && timeOut) release();
 
         // Make sure haptics is ON if we're grabbing
         if (grabbing)
@@ -99,7 +101,7 @@ public class HapticLinking : MonoBehaviour
     }
 
     // Begin grabbing an object. (Like closing a claw.) Normally called when the button is pressed. 
-    void grab()
+    public void grab()
     {
         if (grabbing != null) // Already grabbing
             return;
@@ -112,7 +114,7 @@ public class HapticLinking : MonoBehaviour
 
         Destroy(jointPause);
         grabbing = linkedObject;
-        // Debug.Log("Grabbing Object : " + grabbing.name);
+        Debug.Log("Grabbing Object : " + grabbing.name);
         Rigidbody body = grabbing.GetComponent<Rigidbody>();
 
         joint = (FixedJoint)gameObject.AddComponent(typeof(FixedJoint));
@@ -136,7 +138,7 @@ public class HapticLinking : MonoBehaviour
     }
 
     //! Stop grabbing an obhject. (Like opening a claw.) Normally called when the button is released. 
-    void release()
+    public void release()
     {
         if (grabbing == null) //Nothing to release
             return;
