@@ -9,7 +9,7 @@ To use this script:
 - On the gameobject called *Grabber* remove the haptic grabber component & add the hapticLinking script from this repo.
 
 Settings:
-![[Settings.png]]
+!(settings)[Settings.png]
 
 Video Demonstration:
-![[demogif.gif]]
+!(demogif)[demogif.gif]
